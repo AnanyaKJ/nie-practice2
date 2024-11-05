@@ -1,28 +1,48 @@
 pipeline {
-    agent any
+    agent any  // Use any available agent or executor
+
+    environment {
+        DEPLOY_ENV = 'staging'  // Define the deployment environment
+    }
+
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/yourusername/hello-world-app.git'
+                // Clone the repository
+                git branch: 'main',url: 'https://github.com/AnanyaKJ/nie-practice2.git'
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
+
         stage('Build') {
             steps {
-                sh 'npm start &'
+                // Print a message or run actual build commands here
+                sh 'echo "Building application..."'
+                // Replace the line above with actual build commands, like `mvn clean install` for Maven
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Print a message or run testing commands here
+                sh 'echo "Running tests..."'
+                // Replace this with commands for running unit tests, e.g., `mvn test`
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deploy the application
+                sh 'echo "Deploying to ${DEPLOY_ENV} environment..."'
+                // Include commands to deploy, like `scp` for file transfer or remote deployment scripts
             }
         }
     }
+
     post {
-        success {
-            echo 'Application deployed successfully!'
-        }
-        failure {
-            echo 'Build failed!'
+        always {
+            // Clean up workspace after the pipeline completes
+            echo 'Cleaning up...'
+            deleteDir()
         }
     }
 }
